@@ -1,13 +1,13 @@
 # Expedia Hotel Search Ranking
 
-A learning-to-rank system that predicts which hotel a user will book from Expedia search results. Built on ~10 million real search impressions from the [ICDM 2013 Personalized Sort challenge](https://www.kaggle.com/c/expedia-personalized-sort). The model scored **NDCG@5 = 0.405** and placed **3rd** on the competition leaderboard.
+A learning-to-rank system that predicts which hotel a user will book from Expedia search results. Built on ~10 million real search impressions from the [ICDM 2013 Personalized Sort challenge](https://www.kaggle.com/c/expedia-personalized-sort) dataset. LightGBM LambdaRank with 89 engineered features, evaluated at **NDCG@5 = 0.408**.
 
 | Metric | Score |
 |--------|-------|
 | Validation NDCG@5 | 0.4077 |
-| Test NDCG@5 (Kaggle) | 0.4053 |
+| Held-out test NDCG@5 | 0.4053 |
 | Baseline (logistic regression) | 0.3497 |
-| Relative improvement over baseline | +16.6% |
+| Improvement over baseline | +16.6% |
 
 ## The problem
 
@@ -61,8 +61,8 @@ The model went through 11 systematic experiments. This table shows the key miles
 | First working model (10% sample) | 0.3688 | v1 features, default LightGBM params |
 | Full training data | 0.3943 | Same features, 10× more data |
 | + Property profiles (F2) | 0.4058 | +0.012 from non-target hotel statistics |
-| + Tuned hyperparameters (T4) | 0.4077 | lr=0.02, patience=150, leaves=127 |
-| Kaggle submission | 0.4053 | Public leaderboard score |
+| + Tuned hyperparameters | 0.4077 | lr=0.02, patience=150, leaves=127 |
+| Held-out test evaluation | 0.4053 | Separate test set, not seen during training |
 
 **What didn't work** (and why it matters that we tried):
 
@@ -77,7 +77,7 @@ The model went through 11 systematic experiments. This table shows the key miles
 expedia-hotel-ranking/
 ├── config.py                           # All paths, hyperparameters, feature lists
 ├── run_pipeline.sh                     # End-to-end pipeline runner
-├── requirements.txt
+├── pyproject.toml
 ├── src/
 │   ├── 00_data_check.py                # Dataset shape, types, null audit
 │   ├── 01_eda.py                       # Distributions, position bias, random_bool analysis
@@ -85,10 +85,10 @@ expedia-hotel-ranking/
 │   ├── 02b_feature_v2_aggregates.py    # Target-encoded aggregates (rejected)
 │   ├── 02c_feature_v3_nontarget.py     # Property profiles (F2, +10 features)
 │   ├── 03_split.py                     # Group-aware train/val split by srch_id
-│   ├── 04_train_lgbm.py               # LightGBM LambdaRank training
+│   ├── 04_train_lgbm.py                # LightGBM LambdaRank training
 │   ├── 05_train_baseline.py            # Logistic regression baseline
 │   ├── 06_evaluate.py                  # Model comparison, NDCG@k tables
-│   ├── 07_predict.py                   # Generate Kaggle submission
+│   ├── 07_predict.py                   # Generate test set predictions
 │   ├── 08_bias_analysis.py             # Fairness detection + mitigation
 │   └── utils.py                        # NDCG computation, data loading, plotting
 ├── figures/                            # EDA and evaluation plots
@@ -114,7 +114,7 @@ bash run_pipeline.sh
 
 The pipeline expects `data/train.csv` and `data/test.csv` from the [Kaggle competition page](https://www.kaggle.com/c/expedia-personalized-sort/data). All intermediate artifacts (parquet files, models, predictions) are written to `outputs/` and regenerated on each run.
 
-**Requirements:** Python ≥ 3.10, LightGBM, pandas, numpy, scikit-learn, matplotlib. See `requirements.txt` for pinned versions.
+**Requirements:** Python ≥ 3.10, LightGBM, pandas, numpy, scikit-learn, matplotlib. See `pyproject.toml` for the full dependency list.
 
 ## Key findings
 

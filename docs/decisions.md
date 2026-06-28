@@ -26,7 +26,7 @@ All key decisions for the hotel ranking pipeline. These reflect the final pipeli
 
 ## D5: Primary model (best config)
 - **LightGBM LambdaRank**, lr=0.02, leaves=127, min_child=50, subsample=0.8
-- Best iteration: 1049 | Val NDCG@5: 0.40766 | Kaggle: 0.40533
+- Best iteration: 1049 | Val NDCG@5: 0.40766 | Test: 0.40533
 
 ## D6: Feature set (89 features)
 - v1 base (79): raw, missing flags, semantic zeros, within-search norms, price, visitor match, competitor aggs, search context
