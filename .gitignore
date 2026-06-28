@@ -1,0 +1,31 @@
+# Data files
+data/*.csv
+data/*.parquet
+
+# Pipeline outputs
+outputs/*.parquet
+outputs/*.pkl
+outputs/*.txt
+outputs/*.csv
+outputs/*.json
+outputs/exp_*/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
